@@ -1,0 +1,153 @@
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+}
+body {
+  position: relative;
+  margin: 0;
+  height: 100vh;
+  background-image: linear-gradient(
+    to right top,
+    #2c0537,
+    #4a075f,
+    #68098a,
+    #880cb9,
+    #a712eb
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+main {
+  background-color: rgba(0, 0, 0, 0.4);
+  margin: 10px;
+  padding: 15px;
+  border-radius: calc(1rem + 15px);
+  position: relative;
+  user-select: none;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(4, min(18vw, 20vh));
+  grid-template-rows: repeat(4, min(18vw, 20vh));
+  grid-gap: 1rem;
+  perspective: 800px;
+}
+
+.card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 650ms ease-in;
+  transform-style: preserve-3d;
+  cursor: pointer;
+}
+
+.front,
+.back {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  backface-visibility: hidden;
+  border-radius: 1rem;
+}
+
+.card.toggled .back,
+.card.toggled .front {
+  transition: transform 650ms ease-in-out;
+}
+
+.card.untoggled .back {
+  transition: transform 400ms ease-in-out;
+  transform: rotateY(0);
+}
+
+.card.untoggled .front {
+  transition: transform 400ms ease-in-out;
+  transform: rotateY(180deg);
+}
+
+.card.toggled .back {
+  transition: transform 400ms ease-in-out;
+  transform: rotateY(180deg);
+}
+
+.card.toggled .front {
+  transition: transform 400ms ease-in-out;
+}
+
+.card.discovered .back {
+  transform: rotateY(180deg);
+}
+.card.discovered .front {
+  transform: rotateY(0deg);
+}
+
+.back {
+  font-size: 5rem;
+  font-weight: 700;
+  background-color: rgba(167, 18, 235, 1);
+  background-image: linear-gradient(
+    20deg,
+    rgba(167, 18, 235, 1) 0%,
+    rgba(54, 216, 233, 1) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+
+.buttons {
+  font-size: 2rem;
+  color: #fff;
+  margin-top: 1rem;
+}
+
+.modal {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(104, 9, 138, 0.5);
+  z-index: 2;
+}
+
+.modal-container {
+  background-color: rgba(0, 0, 0, 0.85);
+  color: #fff;
+  max-width: 350px;
+  width: 100%;
+  height: 300px;
+  position: absolute;
+  z-index: 3;
+  border-radius: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  opacity: 1;
+}
+
+.modal.hidden {
+  visibility: hidden;
+}
+
+footer {
+  position: absolute;
+  bottom: 10px;
+  padding: 10px 20px;
+  color: #fff;
+  border-radius: 1rem;
+}
+
+footer a {
+  color: #fff;
+}
