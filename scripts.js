@@ -26,18 +26,79 @@ const images = [
   "img25.jpg",
 ];
 const board = document.querySelector(".board");
-const movesOutput = document.querySelector(".moves");
 const modal = document.querySelector(".modal");
 const modalContainer = modal.querySelector(".modal-container");
 let moves = 0;
+let slicedCards;
+let cards;
+let imagesOnBoard;
 
-const randomize = (slicedCards) => {
-  slicedCards.sort(() => Math.random() - 0.5);
-  return slicedCards;
+const randomize = (imagesToSlice) => {
+  imagesToSlice.sort(() => Math.random() - 0.5);
+  return imagesToSlice;
 };
 
+const checkWin = () => {
+  const untoggledCards = document.querySelectorAll(".untoggled");
+  if (untoggledCards.length === 0) {
+    modal.classList.remove("hidden");
+    modalContainer.innerHTML = `<h1>YOU WON! 🔥</h1>
+        <h2>Total moves: ${moves}</h2>
+        <button class="reset-game">Restart game</button>`;
+    const btnRestart = document.querySelector(".reset-game");
+    btnRestart.addEventListener("click", generateBoard);
+  }
+};
+
+function checkCards(e) {
+  e.target.parentElement.classList.add("toggled");
+  e.target.parentElement.classList.remove("untoggled");
+  const toggledCards = document.querySelectorAll(".toggled");
+  if (toggledCards.length === 2) {
+    cards = document.querySelectorAll(".card");
+    cards.forEach((card) => {
+      card.removeEventListener("click", checkCards);
+    });
+    const first = toggledCards[0];
+    const second = toggledCards[1];
+
+    if (first.dataset.name === second.dataset.name) {
+      setTimeout(
+        () =>
+          toggledCards.forEach((card) => {
+            card.classList.remove("toggled");
+            card.classList.add("discovered");
+          }),
+        400
+      );
+      cards = document.querySelectorAll(".untoggled");
+      setTimeout(
+        () =>
+          cards.forEach((card) => {
+            card.addEventListener("click", checkCards);
+          }),
+        1000
+      );
+      checkWin();
+    } else {
+      setTimeout(
+        () =>
+          toggledCards.forEach((card) => {
+            card.classList.add("untoggled");
+            card.classList.remove("toggled");
+            cards = document.querySelectorAll(".untoggled");
+            cards.forEach((item) => {
+              item.addEventListener("click", checkCards);
+            });
+          }),
+        1000
+      );
+      checkWin();
+    }
+    moves += 1;
+  }
+}
 const generateBoard = () => {
-  console.info("Creating Board...");
   board.innerHTML = "";
   modal.classList.add("hidden");
   slicedCards = randomize(images);
@@ -53,87 +114,18 @@ const generateBoard = () => {
             </div>`;
   });
   const toggledCards = document.querySelectorAll(".card");
-  // setTimeout(() =>
   toggledCards.forEach((card) => {
     card.classList.add("untoggled");
     card.classList.remove("toggled");
-    const cards = document.querySelectorAll(".untoggled");
-    cards.forEach((card) => {
-      card.addEventListener("click", checkCards);
+    cards = document.querySelectorAll(".untoggled");
+    cards.forEach((item) => {
+      item.addEventListener("click", checkCards);
     });
   });
-  const cards = document.querySelectorAll(".untoggled");
+  cards = document.querySelectorAll(".untoggled");
   cards.forEach((card) => {
     card.addEventListener("click", checkCards);
   });
-};
-
-function checkCards(e) {
-  e.target.parentElement.classList.add("toggled");
-  e.target.parentElement.classList.remove("untoggled");
-  const toggledCards = document.querySelectorAll(".toggled");
-  console.log(`toggled:${toggledCards.length}`);
-  if (toggledCards.length === 2) {
-    const cards = document.querySelectorAll(".card");
-    cards.forEach((card) => {
-      card.removeEventListener("click", checkCards);
-    });
-    const first = toggledCards[0];
-    const second = toggledCards[1];
-    console.log(`First: ${first}`);
-    console.log(`Second: ${second}`);
-
-    if (first.dataset.name === second.dataset.name) {
-      setTimeout(
-        () =>
-          toggledCards.forEach((card) => {
-            card.classList.remove("toggled");
-            card.classList.add("discovered");
-          }),
-        400
-      );
-      const cards = document.querySelectorAll(".untoggled");
-      setTimeout(
-        () =>
-          cards.forEach((card) => {
-            card.addEventListener("click", checkCards);
-          }),
-        1000
-      );
-      checkWin();
-    } else {
-      setTimeout(
-        () =>
-          toggledCards.forEach((card) => {
-            card.classList.add("untoggled");
-            card.classList.remove("toggled");
-            const cards = document.querySelectorAll(".untoggled");
-            cards.forEach((card) => {
-              card.addEventListener("click", checkCards);
-            });
-          }),
-        1000
-      );
-      checkWin();
-    }
-    moves++;
-  } else {
-    return;
-  }
-  console.log(moves);
-}
-
-const checkWin = () => {
-  const untoggledCards = document.querySelectorAll(".untoggled");
-  console.log(untoggledCards);
-  if (untoggledCards.length === 0) {
-    modal.classList.remove("hidden");
-    modalContainer.innerHTML = `<h1>YOU WON! 🔥</h1>
-        <h2>Total moves: ${moves}</h2>
-        <button class="reset-game">Restart game</button>`;
-    const btnRestart = document.querySelector(".reset-game");
-    btnRestart.addEventListener("click", generateBoard);
-  }
 };
 
 generateBoard();

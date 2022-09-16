@@ -3,5 +3,12 @@
   "env": {
     "browser": true
   },
-  "rules": {}
+  "rules": {
+      "no-use-before-define": ["warn", {
+          "functions": false,
+          "classes": true,
+          "variables": true,
+          "allowNamedExports": false
+      }]
+  }
 }
