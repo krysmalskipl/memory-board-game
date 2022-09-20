@@ -99,6 +99,7 @@ function checkCards(e) {
   }
 }
 const generateBoard = () => {
+  moves = 0;
   board.innerHTML = "";
   modal.classList.add("hidden");
   slicedCards = randomize(images);
